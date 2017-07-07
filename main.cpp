@@ -21,6 +21,8 @@ int main(int argc, char** argv ){
     cout<<"\t n : Next frame"<<endl;
     cout<<"\t p : Previous frame"<<endl;
     cout<<"\t d : Draw ground truth ON/OFF"<<endl;
+    cout<<"\t m : Increase draw delay"<<endl;
+    cout<<"\t l : Decrease draw delay"<<endl;
     cout<<"\t i : Display infos ON/OFF"<<endl;
     cout<<"\t c : Change color"<<endl;
     cout<<"\t SPACE : Lecture auto ON/OFF"<<endl;
@@ -93,21 +95,24 @@ int main(int argc, char** argv ){
     colors[3] = Scalar(255,0,255);
     colors[4] = Scalar(255,255,0);
 
-
-
     namedWindow("Visual tracking - Ground Truth", WINDOW_AUTOSIZE);
     FrameIt = FramePath.begin();
     BoundingBoxIt = BoundingBox.begin();
     OcclusionIt = Occlusion.begin();
     char key;
     bool automode=0, drawBox=1, drawInfo=1;
+    int drawDelay=1, drawDelayMax=10;
     do{
         frame = imread((*FrameIt).c_str(), 1);
         if(drawBox){
-            if(*OcclusionIt)
-                rectangle(frame, (*BoundingBoxIt), colors[colorIdx],1);
-            else
-                rectangle(frame, (*BoundingBoxIt), colors[colorIdx],2);
+            for(int i=0;i<drawDelay;i++){
+                if(i<=distance(BoundingBox.begin(),BoundingBoxIt)){
+                    if(i==0)
+                        rectangle(frame, *(BoundingBoxIt-i), colors[colorIdx],2);
+                    else
+                        rectangle(frame, *(BoundingBoxIt-i), colors[colorIdx]-Scalar(colors[colorIdx][0]/(i+1),colors[colorIdx][1]/(i+1),colors[colorIdx][2]/(i+1)),1);
+                }
+            }
         }
 
         if(drawInfo){
@@ -146,9 +151,17 @@ int main(int argc, char** argv ){
                 automode=!automode;break;
             case 100 : //DRAW MODE
                 drawBox=!drawBox;break;
-            case 99 : //DRAW MODE
+            case 99 : //CHANGE COLOR
                if(++colorIdx>colors.size()-1)
                     colorIdx=0;
+               break;
+            case 109 : //CHANGE DELAY
+               if(drawDelay+1<drawDelayMax)
+                   drawDelay++;
+               break;
+            case 108 : //CHANGE DELAY
+               if(drawDelay-1>0)
+                   drawDelay--;
                break;
             }
         }else{
@@ -165,9 +178,17 @@ int main(int argc, char** argv ){
                 automode=!automode;break;
             case 100 : //DRAW MODE
                 drawBox=!drawBox;break;
-            case 99 : //DRAW MODE
+            case 99 : //CHANGE COLOR
                 if(++colorIdx>colors.size()-1)
                     colorIdx=0;
+               break;
+            case 109 : //CHANGE DELAY
+               if(drawDelay+1<drawDelayMax)
+                   drawDelay++;
+               break;
+            case 108 : //CHANGE DELAY
+               if(drawDelay-1>0)
+                   drawDelay--;
                break;
             }
         }
