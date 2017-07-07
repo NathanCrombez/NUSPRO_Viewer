@@ -21,7 +21,7 @@ int main(int argc, char** argv ){
     cout<<"\t n : Next frame"<<endl;
     cout<<"\t p : Previous frame"<<endl;
     cout<<"\t d : Draw ground truth ON/OFF"<<endl;
-    cout<<"\t i : Display infos about current frame"<<endl;
+    cout<<"\t i : Display infos ON/OFF"<<endl;
     cout<<"\t SPACE : Lecture auto ON/OFF"<<endl;
     cout<<"\t ESC : Quit"<<endl;
     cout<<"***************************************************************"<<endl;
@@ -90,7 +90,7 @@ int main(int argc, char** argv ){
     BoundingBoxIt = BoundingBox.begin();
     OcclusionIt = Occlusion.begin();
     char key;
-    bool automode=0, drawBox=1;
+    bool automode=0, drawBox=1, drawInfo=1;
     do{
         frame = imread((*FrameIt).c_str(), 1);
         if(drawBox){
@@ -99,6 +99,16 @@ int main(int argc, char** argv ){
             else
                 rectangle(frame, (*BoundingBoxIt), Scalar(0,255,0),2);
         }
+
+        if(drawInfo){
+        putText(frame, lexical_cast<string>((*FrameIt).filename())+" - ("+lexical_cast<string>(distance(FramePath.begin(),FrameIt)) + " / " +lexical_cast<string>(distance(FramePath.begin(),FramePath.end())) + ")" ,Point(25,50), FONT_HERSHEY_SIMPLEX, 0.5, Scalar(0,255,0));
+        putText(frame, "Ground truth : "+lexical_cast<string>((*BoundingBoxIt).x) + " " + lexical_cast<string>((*BoundingBoxIt).y) + " " + lexical_cast<string>((*BoundingBoxIt).width) + " "+ lexical_cast<string>((*BoundingBoxIt).height),Point(25,70), FONT_HERSHEY_SIMPLEX, 0.5, Scalar(0,255,0));
+        if(*OcclusionIt)
+            putText(frame, "Occlusion", Point(25,90), FONT_HERSHEY_SIMPLEX, 0.5, Scalar(0,255,0));
+        else
+            putText(frame, "No occlusion", Point(25,90), FONT_HERSHEY_SIMPLEX, 0.5, Scalar(0,255,0));
+        }
+
 
         imshow( "Visual tracking - Ground Truth", frame );
 
@@ -121,10 +131,7 @@ int main(int argc, char** argv ){
             case 27 :   //QUIT
                 FrameIt = FramePath.end();break;
             case 105 : //INFOS
-                cout<<"\033[32mFrame : \033[0m"<<(*FrameIt).filename()<<" - ("<<distance(FramePath.begin(),FrameIt)<<"/"<<distance(FramePath.begin(),FramePath.end())<<")"<<endl;
-                cout<<"\033[32mGround truth : \033[0m"<<(*BoundingBoxIt).x<<" "<<(*BoundingBoxIt).y<<" "<<(*BoundingBoxIt).width<<" "<<(*BoundingBoxIt).height<<endl;
-                cout<<"\033[32mOcclusion : \033[0m"<<(*OcclusionIt)<<endl;
-                break;
+                drawInfo=!drawInfo;break;
             case 32 : //LECTURE MODE
                 automode=!automode;break;
             case 100 : //DRAW MODE
@@ -139,10 +146,7 @@ int main(int argc, char** argv ){
             case 27 :   //QUIT
                 FrameIt = FramePath.end();break;
             case 105 : //INFOS
-                cout<<"\033[32mFrame : \033[0m"<<(*FrameIt).filename()<<" - ("<<distance(FramePath.begin(),FrameIt)<<"/"<<distance(FramePath.begin(),FramePath.end())<<")"<<endl;
-                cout<<"\033[32mGround truth : \033[0m"<<(*BoundingBoxIt).x<<" "<<(*BoundingBoxIt).y<<" "<<(*BoundingBoxIt).width<<" "<<(*BoundingBoxIt).height<<endl;
-                cout<<"\033[32mOcclusion : \033[0m"<<(*OcclusionIt)<<endl;
-                break;
+                drawInfo=!drawInfo;break;
             case 32 : //LECTURE MODE
                 automode=!automode;break;
             case 100 : //DRAW MODE
