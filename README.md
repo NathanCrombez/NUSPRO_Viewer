@@ -5,7 +5,7 @@ Viewer for NUS_PRO Datasets
 ***************************************************************
 NUS_PRO Datasets Viewer
 ./NUSPRO_Viewer "Path/to/Dataset/folder"
-Controls : 
+Controls :
 	 -> : Next frame
 	 <- : Previous frame
 	 SPACE : Lecture auto ON/OFF
