@@ -82,9 +82,9 @@ int main(int argc, char** argv ){
         frame = imread((*FrameIt).c_str(), 1);
         if(drawBox){
             if(*OcclusionIt)
-                rectangle(frame, (*BoundingBoxIt), Scalar(0,0,255),1);
+                rectangle(frame, (*BoundingBoxIt), Scalar(0,255,0),1);
             else
-                rectangle(frame, (*BoundingBoxIt), Scalar(0,0,255),2);
+                rectangle(frame, (*BoundingBoxIt), Scalar(0,255,0),2);
         }
 
         imshow( "Visual tracking - Ground Truth", frame );
@@ -107,8 +107,9 @@ int main(int argc, char** argv ){
             case 27 :   //QUIT
                 FrameIt = FramePath.end();break;
             case 105 : //INFOS
-                cout<<"Frame : "<<(*FrameIt).filename()<<endl;
-                cout<<"Ground truth : "<<(*BoundingBoxIt).x<<" "<<(*BoundingBoxIt).y<<" "<<(*BoundingBoxIt).width<<" "<<(*BoundingBoxIt).height<<endl;
+                cout<<"\033[32mFrame : \033[0m"<<(*FrameIt).filename()<<" - ("<<distance(FramePath.begin(),FrameIt)<<"/"<<distance(FramePath.begin(),FramePath.end())<<")"<<endl;
+                cout<<"\033[32mGround truth : \033[0m"<<(*BoundingBoxIt).x<<" "<<(*BoundingBoxIt).y<<" "<<(*BoundingBoxIt).width<<" "<<(*BoundingBoxIt).height<<endl;
+                cout<<"\033[32mOcclusion : \033[0m"<<(*OcclusionIt)<<endl;
                 break;
             case 32 : //LECTURE MODE
                 automode=!automode;break;
@@ -124,8 +125,9 @@ int main(int argc, char** argv ){
             case 27 :   //QUIT
                 FrameIt = FramePath.end();break;
             case 105 : //INFOS
-                cout<<"Frame : "<<(*FrameIt).filename()<<endl;
-                cout<<"Ground truth : "<<(*BoundingBoxIt).x<<" "<<(*BoundingBoxIt).y<<" "<<(*BoundingBoxIt).width<<" "<<(*BoundingBoxIt).height<<endl;
+                cout<<"\033[32mFrame : \033[0m"<<(*FrameIt).filename()<<" - ("<<distance(FramePath.begin(),FrameIt)<<"/"<<distance(FramePath.begin(),FramePath.end())<<")"<<endl;
+                cout<<"\033[32mGround truth : \033[0m"<<(*BoundingBoxIt).x<<" "<<(*BoundingBoxIt).y<<" "<<(*BoundingBoxIt).width<<" "<<(*BoundingBoxIt).height<<endl;
+                cout<<"\033[32mOcclusion : \033[0m"<<(*OcclusionIt)<<endl;
                 break;
             case 32 : //LECTURE MODE
                 automode=!automode;break;
