@@ -72,7 +72,7 @@ int main(int argc, char** argv ){
 
 
 
-    namedWindow( "Ground Truth", WINDOW_AUTOSIZE );
+    namedWindow("Visual tracking - Ground Truth", WINDOW_AUTOSIZE);
     FrameIt = FramePath.begin();
     BoundingBoxIt = BoundingBox.begin();
     OcclusionIt = Occlusion.begin();
@@ -82,12 +82,12 @@ int main(int argc, char** argv ){
         frame = imread((*FrameIt).c_str(), 1);
         if(drawBox){
             if(*OcclusionIt)
-                rectangle(frame, (*BoundingBoxIt), Scalar(0,0,255));
+                rectangle(frame, (*BoundingBoxIt), Scalar(0,0,255),1);
             else
                 rectangle(frame, (*BoundingBoxIt), Scalar(0,0,255),2);
         }
 
-        imshow( "Ground Truth", frame );
+        imshow( "Visual tracking - Ground Truth", frame );
 
         if(!automode){
             key = waitKey(0);
@@ -112,7 +112,7 @@ int main(int argc, char** argv ){
                 break;
             case 32 : //LECTURE MODE
                 automode=!automode;break;
-            case 100 : //LECTURE MODE
+            case 100 : //DRAW MODE
                 drawBox=!drawBox;break;
             }
         }else{
@@ -129,7 +129,7 @@ int main(int argc, char** argv ){
                 break;
             case 32 : //LECTURE MODE
                 automode=!automode;break;
-            case 100 : //LECTURE MODE
+            case 100 : //DRAW MODE
                 drawBox=!drawBox;break;
             }
         }
