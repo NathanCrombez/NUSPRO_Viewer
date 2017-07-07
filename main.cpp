@@ -16,17 +16,17 @@ int main(int argc, char** argv ){
     cout<<"\033[32m***************************************************************"<<endl;
     cout<<"***************************************************************"<<endl;
     cout<<"NUS_PRO Datasets Viewer"<<endl;
-    cout<<"./NUSPRO_Viewer \"Path/to/Dataset/folder\""<<endl;
+    cout<<"Use :  ./NUSPRO_Viewer \"Path/to/Dataset/folder\""<<endl;
     cout<<"Controls : "<<endl;
     cout<<"\t n : Next frame"<<endl;
     cout<<"\t p : Previous frame"<<endl;
-    cout<<"\t SPACE : Lecture auto ON/OFF"<<endl;
-    cout<<"\t d : Display ground truth ON/OFF"<<endl;
+    cout<<"\t d : Draw ground truth ON/OFF"<<endl;
     cout<<"\t i : Display infos about current frame"<<endl;
+    cout<<"\t SPACE : Lecture auto ON/OFF"<<endl;
     cout<<"\t ESC : Quit"<<endl;
     cout<<"***************************************************************"<<endl;
-    cout<<"Authour : Nathan Crombez (07/07/17)"<<endl;
-    cout<<"***************************************************************"<<endl;
+    cout<<"Author : Nathan Crombez"<<endl;
+    cout<<"Le2i - Laboratoire Electronique, Informatique et Image"<<endl;
     cout<<"***************************************************************\033[0m"<<endl;
 
     if(argc<=1){
