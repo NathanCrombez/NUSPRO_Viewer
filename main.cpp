@@ -32,10 +32,13 @@ int main(int argc, char** argv ){
 
 
     ifstream ficGroundTruth((lexical_cast<string>(argv[1])+"/groundtruth.txt").c_str());
+    ifstream ficOcclusion((lexical_cast<string>(argv[1])+"/occlusion.txt").c_str());
     string line;
     Mat frame;
     filesystem::path sequencePath(argv[1]);
     vector<Rect> BoundingBox;
+    vector<bool> Occlusion;
+    bool occluded;
     Rect rect;
     Point p1,p2;
     vector<filesystem::path> FramePath;
@@ -43,6 +46,7 @@ int main(int argc, char** argv ){
     sort(FramePath.begin(), FramePath.end());
     vector<filesystem::path>::iterator FrameIt = FramePath.begin();
     vector<Rect>::iterator BoundingBoxIt;
+    vector<bool>::iterator OcclusionIt;
     do{
         if ((*FrameIt).string().find(".jpg") == std::string::npos) {
             FramePath.erase(FrameIt);
@@ -56,6 +60,12 @@ int main(int argc, char** argv ){
             rect.width = p2.x - p1.x;
             rect.height = p2.y - p1.y;
             BoundingBox.push_back(rect);
+            ficOcclusion>> occluded;
+            if(occluded){
+                Occlusion.push_back(1);
+            }else{
+                Occlusion.push_back(0);
+            }
             FrameIt++;
         }
     }while (FrameIt != FramePath.end());
@@ -65,12 +75,16 @@ int main(int argc, char** argv ){
     namedWindow( "Ground Truth", WINDOW_AUTOSIZE );
     FrameIt = FramePath.begin();
     BoundingBoxIt = BoundingBox.begin();
+    OcclusionIt = Occlusion.begin();
     char key;
     bool automode=0, drawBox=1;
     do{
         frame = imread((*FrameIt).c_str(), 1);
         if(drawBox){
-            rectangle(frame, (*BoundingBoxIt), Scalar(0,0,255));
+            if(*OcclusionIt)
+                rectangle(frame, (*BoundingBoxIt), Scalar(0,0,255));
+            else
+                rectangle(frame, (*BoundingBoxIt), Scalar(0,0,255),2);
         }
 
         imshow( "Ground Truth", frame );
@@ -82,11 +96,13 @@ int main(int argc, char** argv ){
                 if(FrameIt!=FramePath.end()-1){
                     FrameIt++;
                     BoundingBoxIt++;
+                    OcclusionIt++;
                 }break;
             case 81 :   //PREVIOUS
                 if(FrameIt!=FramePath.begin()){
                     FrameIt--;
                     BoundingBoxIt--;
+                    OcclusionIt--;
                 }break;
             case 27 :   //QUIT
                 FrameIt = FramePath.end();break;
@@ -102,6 +118,7 @@ int main(int argc, char** argv ){
         }else{
             FrameIt++;
             BoundingBoxIt++;
+            OcclusionIt++;
             key = waitKey(100);
             switch((int)key){
             case 27 :   //QUIT
