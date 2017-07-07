@@ -1,5 +1,5 @@
 # NUSPRO_Viewer
-Viewer for NUS_PRO Datasets
+Viewer for NUS-PRO Datasets
 
 https://sites.google.com/site/li00annan/nus-pro
 
