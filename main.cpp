@@ -53,8 +53,8 @@ int main(int argc, char** argv ){
     Mat frame;
     filesystem::path sequencePath(argv[1]);
     vector<Rect> BoundingBox;
-    vector<bool> Occlusion;
-    bool occluded;
+    vector<int> Occlusion;
+    int occluded;
     Rect rect;
     Point p1,p2;
     vector<filesystem::path> FramePath;
@@ -62,7 +62,7 @@ int main(int argc, char** argv ){
     sort(FramePath.begin(), FramePath.end());
     vector<filesystem::path>::iterator FrameIt = FramePath.begin();
     vector<Rect>::iterator BoundingBoxIt;
-    vector<bool>::iterator OcclusionIt;
+    vector<int>::iterator OcclusionIt;
     do{
         if ((*FrameIt).string().find(".jpg") == std::string::npos) {
             FramePath.erase(FrameIt);
@@ -77,11 +77,8 @@ int main(int argc, char** argv ){
             rect.height = p2.y - p1.y;
             BoundingBox.push_back(rect);
             ficOcclusion>> occluded;
-            if(occluded){
-                Occlusion.push_back(1);
-            }else{
-                Occlusion.push_back(0);
-            }
+            Occlusion.push_back(occluded);
+
             FrameIt++;
         }
     }while (FrameIt != FramePath.end());
@@ -116,12 +113,14 @@ int main(int argc, char** argv ){
         }
 
         if(drawInfo){
-        putText(frame, lexical_cast<string>((*FrameIt).filename())+" - ("+lexical_cast<string>(distance(FramePath.begin(),FrameIt)) + " / " +lexical_cast<string>(distance(FramePath.begin(),FramePath.end())) + ")" ,Point(25,50), FONT_HERSHEY_SIMPLEX, 0.5, colors[colorIdx]);
-        putText(frame, "Ground truth : "+lexical_cast<string>((*BoundingBoxIt).x) + " " + lexical_cast<string>((*BoundingBoxIt).y) + " " + lexical_cast<string>((*BoundingBoxIt).width) + " "+ lexical_cast<string>((*BoundingBoxIt).height),Point(25,70), FONT_HERSHEY_SIMPLEX, 0.5, colors[colorIdx]);
-        if(*OcclusionIt)
-            putText(frame, "Occlusion", Point(25,90), FONT_HERSHEY_SIMPLEX, 0.5, colors[colorIdx]);
-        else
-            putText(frame, "No occlusion", Point(25,90), FONT_HERSHEY_SIMPLEX, 0.5, colors[colorIdx]);
+            putText(frame, lexical_cast<string>((*FrameIt).filename())+" - ("+lexical_cast<string>(distance(FramePath.begin(),FrameIt)) + " / " +lexical_cast<string>(distance(FramePath.begin(),FramePath.end())) + ")" ,Point(25,50), FONT_HERSHEY_SIMPLEX, 0.5, colors[colorIdx]);
+            putText(frame, "Ground truth : "+lexical_cast<string>((*BoundingBoxIt).x) + " " + lexical_cast<string>((*BoundingBoxIt).y) + " " + lexical_cast<string>((*BoundingBoxIt).width) + " "+ lexical_cast<string>((*BoundingBoxIt).height),Point(25,70), FONT_HERSHEY_SIMPLEX, 0.5, colors[colorIdx]);
+            if((*OcclusionIt)==2)
+                putText(frame, "Full Occlusion", Point(25,90), FONT_HERSHEY_SIMPLEX, 0.5, colors[colorIdx]);
+            else if ((*OcclusionIt)==1)
+                putText(frame, "Partial Occlusion", Point(25,90), FONT_HERSHEY_SIMPLEX, 0.5, colors[colorIdx]);
+            else
+                putText(frame, "No occlusion", Point(25,90), FONT_HERSHEY_SIMPLEX, 0.5, colors[colorIdx]);
         }
 
 
@@ -168,7 +167,7 @@ int main(int argc, char** argv ){
             FrameIt++;
             BoundingBoxIt++;
             OcclusionIt++;
-            key = waitKey(100);
+            key = waitKey(50);
             switch((int)key){
             case 27 :   //QUIT
                 FrameIt = FramePath.end();break;
