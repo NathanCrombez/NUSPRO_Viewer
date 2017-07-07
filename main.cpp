@@ -22,6 +22,7 @@ int main(int argc, char** argv ){
     cout<<"\t p : Previous frame"<<endl;
     cout<<"\t d : Draw ground truth ON/OFF"<<endl;
     cout<<"\t i : Display infos ON/OFF"<<endl;
+    cout<<"\t c : Change color"<<endl;
     cout<<"\t SPACE : Lecture auto ON/OFF"<<endl;
     cout<<"\t ESC : Quit"<<endl;
     cout<<"***************************************************************"<<endl;
@@ -84,6 +85,15 @@ int main(int argc, char** argv ){
     }while (FrameIt != FramePath.end());
 
 
+    int colorIdx=0;
+    vector<Scalar> colors(5);
+    colors[0] = Scalar(0,255,0);
+    colors[1] = Scalar(255,0,0);
+    colors[2] = Scalar(0,0,255);
+    colors[3] = Scalar(255,0,255);
+    colors[4] = Scalar(255,255,0);
+
+
 
     namedWindow("Visual tracking - Ground Truth", WINDOW_AUTOSIZE);
     FrameIt = FramePath.begin();
@@ -95,18 +105,18 @@ int main(int argc, char** argv ){
         frame = imread((*FrameIt).c_str(), 1);
         if(drawBox){
             if(*OcclusionIt)
-                rectangle(frame, (*BoundingBoxIt), Scalar(0,255,0),1);
+                rectangle(frame, (*BoundingBoxIt), colors[colorIdx],1);
             else
-                rectangle(frame, (*BoundingBoxIt), Scalar(0,255,0),2);
+                rectangle(frame, (*BoundingBoxIt), colors[colorIdx],2);
         }
 
         if(drawInfo){
-        putText(frame, lexical_cast<string>((*FrameIt).filename())+" - ("+lexical_cast<string>(distance(FramePath.begin(),FrameIt)) + " / " +lexical_cast<string>(distance(FramePath.begin(),FramePath.end())) + ")" ,Point(25,50), FONT_HERSHEY_SIMPLEX, 0.5, Scalar(0,255,0));
-        putText(frame, "Ground truth : "+lexical_cast<string>((*BoundingBoxIt).x) + " " + lexical_cast<string>((*BoundingBoxIt).y) + " " + lexical_cast<string>((*BoundingBoxIt).width) + " "+ lexical_cast<string>((*BoundingBoxIt).height),Point(25,70), FONT_HERSHEY_SIMPLEX, 0.5, Scalar(0,255,0));
+        putText(frame, lexical_cast<string>((*FrameIt).filename())+" - ("+lexical_cast<string>(distance(FramePath.begin(),FrameIt)) + " / " +lexical_cast<string>(distance(FramePath.begin(),FramePath.end())) + ")" ,Point(25,50), FONT_HERSHEY_SIMPLEX, 0.5, colors[colorIdx]);
+        putText(frame, "Ground truth : "+lexical_cast<string>((*BoundingBoxIt).x) + " " + lexical_cast<string>((*BoundingBoxIt).y) + " " + lexical_cast<string>((*BoundingBoxIt).width) + " "+ lexical_cast<string>((*BoundingBoxIt).height),Point(25,70), FONT_HERSHEY_SIMPLEX, 0.5, colors[colorIdx]);
         if(*OcclusionIt)
-            putText(frame, "Occlusion", Point(25,90), FONT_HERSHEY_SIMPLEX, 0.5, Scalar(0,255,0));
+            putText(frame, "Occlusion", Point(25,90), FONT_HERSHEY_SIMPLEX, 0.5, colors[colorIdx]);
         else
-            putText(frame, "No occlusion", Point(25,90), FONT_HERSHEY_SIMPLEX, 0.5, Scalar(0,255,0));
+            putText(frame, "No occlusion", Point(25,90), FONT_HERSHEY_SIMPLEX, 0.5, colors[colorIdx]);
         }
 
 
@@ -136,6 +146,10 @@ int main(int argc, char** argv ){
                 automode=!automode;break;
             case 100 : //DRAW MODE
                 drawBox=!drawBox;break;
+            case 99 : //DRAW MODE
+               if(++colorIdx>colors.size()-1)
+                    colorIdx=0;
+               break;
             }
         }else{
             FrameIt++;
@@ -151,6 +165,10 @@ int main(int argc, char** argv ){
                 automode=!automode;break;
             case 100 : //DRAW MODE
                 drawBox=!drawBox;break;
+            case 99 : //DRAW MODE
+                if(++colorIdx>colors.size()-1)
+                    colorIdx=0;
+               break;
             }
         }
     }while (FrameIt != FramePath.end());
