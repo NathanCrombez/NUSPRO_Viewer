@@ -18,8 +18,8 @@ int main(int argc, char** argv ){
     cout<<"NUS_PRO Datasets Viewer"<<endl;
     cout<<"./NUSPRO_Viewer \"Path/to/Dataset/folder\""<<endl;
     cout<<"Controls : "<<endl;
-    cout<<"\t -> : Next frame"<<endl;
-    cout<<"\t <- : Previous frame"<<endl;
+    cout<<"\t n : Next frame"<<endl;
+    cout<<"\t p : Previous frame"<<endl;
     cout<<"\t SPACE : Lecture auto ON/OFF"<<endl;
     cout<<"\t d : Display ground truth ON/OFF"<<endl;
     cout<<"\t i : Display infos about current frame"<<endl;
@@ -29,10 +29,23 @@ int main(int argc, char** argv ){
     cout<<"***************************************************************"<<endl;
     cout<<"***************************************************************\033[0m"<<endl;
 
+    if(argc<=1){
+        cout<<"\033[31mYou forgot the folder path !"<<endl;
+        cout<<"./NUSPRO_Viewer \"Path/to/Dataset/folder\"\033[0m"<<endl;
+        return 1;
+    }
+
+    if( !boost::filesystem::exists(lexical_cast<string>(argv[1])+"/groundtruth.txt") || !boost::filesystem::exists(lexical_cast<string>(argv[1])+"/occlusion.txt")){
+        cout<<"\033[31mCan't find the data."<<endl;
+        cout<<"Verify your folder path.\033[0m"<<endl;
+        return 1;
+    }
+
+    ifstream ficGroundTruth, ficOcclusion;
+    ficGroundTruth.open((lexical_cast<string>(argv[1])+"/groundtruth.txt").c_str());
+    ficOcclusion.open((lexical_cast<string>(argv[1])+"/occlusion.txt").c_str());
 
 
-    ifstream ficGroundTruth((lexical_cast<string>(argv[1])+"/groundtruth.txt").c_str());
-    ifstream ficOcclusion((lexical_cast<string>(argv[1])+"/occlusion.txt").c_str());
     string line;
     Mat frame;
     filesystem::path sequencePath(argv[1]);
@@ -91,14 +104,15 @@ int main(int argc, char** argv ){
 
         if(!automode){
             key = waitKey(0);
+            //cout<<(int)key<<endl;
             switch((int)key){
-            case 83 :   //NEXT
+            case 110 :   //NEXT
                 if(FrameIt!=FramePath.end()-1){
                     FrameIt++;
                     BoundingBoxIt++;
                     OcclusionIt++;
                 }break;
-            case 81 :   //PREVIOUS
+            case 112 :   //PREVIOUS
                 if(FrameIt!=FramePath.begin()){
                     FrameIt--;
                     BoundingBoxIt--;
