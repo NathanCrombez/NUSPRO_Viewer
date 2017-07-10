@@ -5,7 +5,7 @@ set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
 
-find_package(Boost COMPONENTS filesystem)
+find_package(Boost COMPONENTS filesystem program_options)
 find_package(OpenCV REQUIRED)
 
 include_directories(${Boost_INCLUDE_DIRS})
