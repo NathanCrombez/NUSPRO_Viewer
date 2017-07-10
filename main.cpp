@@ -58,10 +58,11 @@ int main(int argc, char** argv ){
 
     int mode=0;
     string folderPath;
+
     if(vm.count("path")){
         folderPath = vm["path"].as<string>();
     }else{
-        cout<<"\033[31mDid you forget the folder path ?"<<endl;
+        cout<<"\033[31mDid you forget the folder path ?\033[0m"<<endl;
         return 1;
     }
     if( !boost::filesystem::exists(folderPath+"/groundtruth.txt") || !boost::filesystem::exists(folderPath+"/occlusion.txt")){
@@ -72,16 +73,23 @@ int main(int argc, char** argv ){
 
     if (vm.count("mode")) {
         mode = vm["mode"].as<int>();
+        switch (mode) {
+        case 0:
+            cout<<"Mode : Viewer"<<endl;
+            break;
+        case 1:
+            cout<<"Mode : Extract"<<endl;
+            filesystem::create_directory(folderPath+"/GroundTruthROI");
+            break;
+        default:
+            cout<<"\033[31mWhat is the mode : "<<mode<<"\033[0m"<<endl;
+            cout << desc << endl;
+            return 1;
+            break;
+        }
+    }else{
+        cout<<"Mode : Viewer (default)"<<endl;
     }
-    if(mode<0 || mode>1){
-        cout<<"\033[31mWhat is the mode : "<<mode<<"\033[0m"<<endl;
-        cout << desc << endl;
-        return 1;
-    }else if(mode==1){
-        filesystem::create_directory(folderPath+"/GroundTruthROI");
-    }
-
-
 
     ifstream ficGroundTruth, ficOcclusion;
     ficGroundTruth.open((folderPath+"/groundtruth.txt").c_str());
@@ -176,7 +184,6 @@ int main(int argc, char** argv ){
 
 
             imshow( "Visual tracking - Ground Truth", frame );
-
             if(!automode){
                 key = waitKey(0);
                 //cout<<(int)key<<endl;
