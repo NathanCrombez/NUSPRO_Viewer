@@ -18,5 +18,5 @@ add_executable (
   ${PROJECT_NAME} ${SOURCES}
 )
 
-target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS} ${Boost_LIBRARIES}  -lboost_system -lopencv_nonfree)
+target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS} ${Boost_LIBRARIES} -lboost_system)
 
