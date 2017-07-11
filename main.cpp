@@ -78,7 +78,7 @@ int main(int argc, char** argv ){
             cout<<"Mode : Viewer"<<endl;
             break;
         case 1:
-            cout<<"Mode : Extract"<<endl;
+            cout<<"Mode : Extract to "<<folderPath+"/GroundTruthROI"<<endl;
             filesystem::create_directory(folderPath+"/GroundTruthROI");
             break;
         default:
